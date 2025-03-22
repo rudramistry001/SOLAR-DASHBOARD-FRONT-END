@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Panel Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 lg:translate-x-0" id="sidebar">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h1 class="text-xl font-bold text-gray-800">Solar Dashboard</h1>
+            <button class="lg:hidden" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="mt-4">
+            <a href="index.html" class="flex items-center px-4 py-3 text-gray-700 bg-gray-100">
+                <i class="fas fa-home w-6"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="analytics.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-chart-line w-6"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="system-health.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-solar-panel w-6"></i>
+                <span>System Health</span>
+            </a>
+            <a href="settings.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-cog w-6"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 min-h-screen">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm relative">
+            <div class="flex items-center justify-between p-4">
+                <button class="lg:hidden" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <!-- Notification Button -->
+                    <div class="relative">
+                        <button class="p-2 rounded-full hover:bg-gray-100" onclick="toggleNotifications()">
+                            <i class="fas fa-bell"></i>
+                            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+                        <!-- Notifications Panel -->
+                        <div id="notificationsPanel" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50">
+                            <div class="p-4 border-b">
+                                <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
+                            </div>
+                            <div class="max-h-96 overflow-y-auto">
+                                <!-- Notification Items -->
+                                <div class="p-4 border-b hover:bg-gray-50">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <span class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-exclamation-triangle text-yellow-500"></i>
+                                            </span>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-800">Maintenance Required</p>
+                                            <p class="text-xs text-gray-500 mt-1">Panel cleaning scheduled in 5 days</p>
+                                            <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4 border-b hover:bg-gray-50">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <span class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-check text-green-500"></i>
+                                            </span>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-800">Performance Goal Achieved</p>
+                                            <p class="text-xs text-gray-500 mt-1">Daily production exceeded target by 15%</p>
+                                            <p class="text-xs text-gray-400 mt-1">5 hours ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4 border-b hover:bg-gray-50">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <span class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-info-circle text-blue-500"></i>
+                                            </span>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-800">System Update Available</p>
+                                            <p class="text-xs text-gray-500 mt-1">New firmware version 2.1.4 available</p>
+                                            <p class="text-xs text-gray-400 mt-1">1 day ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 border-t">
+                                <a href="#" class="text-sm text-blue-600 hover:text-blue-800">View all notifications</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Button -->
+                    <div class="relative">
+                        <button class="p-2 rounded-full hover:bg-gray-100" onclick="toggleProfile()">
+                            <i class="fas fa-user-circle text-xl"></i>
+                        </button>
+                        <!-- Profile Panel -->
+                        <div id="profilePanel" class="hidden absolute right-0 mt-2 w-60 bg-white rounded-lg shadow-lg z-50">
+                            <div class="p-4 border-b">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                                        JD
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-800">John Doe</p>
+                                        <p class="text-xs text-gray-500">john@example.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-2">
+                                <a href="settings.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-cog w-5"></i>
+                                    Settings
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user w-5"></i>
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-question-circle w-5"></i>
+                                    Help
+                                </a>
+                                <hr class="my-2">
+                                <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                    <i class="fas fa-sign-out-alt w-5"></i>
+                                    Sign out
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6">
+            <!-- Quick Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <!-- Current Power Output -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-500 text-sm">Current Power</h3>
+                        <i class="fas fa-bolt text-yellow-500"></i>
+                    </div>
+                    <div class="flex items-baseline mt-4">
+                        <h2 class="text-3xl font-bold text-gray-800">5.2</h2>
+                        <span class="ml-2 text-gray-500">kW</span>
+                    </div>
+                    <div class="text-green-500 text-sm mt-2">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>12% from last hour</span>
+                    </div>
+                </div>
+
+                <!-- Daily Energy -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-500 text-sm">Today's Energy</h3>
+                        <i class="fas fa-sun text-orange-500"></i>
+                    </div>
+                    <div class="flex items-baseline mt-4">
+                        <h2 class="text-3xl font-bold text-gray-800">32.5</h2>
+                        <span class="ml-2 text-gray-500">kWh</span>
+                    </div>
+                    <div class="text-green-500 text-sm mt-2">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>8% from yesterday</span>
+                    </div>
+                </div>
+
+                <!-- Monthly Energy -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-500 text-sm">Monthly Energy</h3>
+                        <i class="fas fa-calendar text-blue-500"></i>
+                    </div>
+                    <div class="flex items-baseline mt-4">
+                        <h2 class="text-3xl font-bold text-gray-800">958</h2>
+                        <span class="ml-2 text-gray-500">kWh</span>
+                    </div>
+                    <div class="text-green-500 text-sm mt-2">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>5% from last month</span>
+                    </div>
+                </div>
+
+                <!-- System Health -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-500 text-sm">System Health</h3>
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                    <div class="flex items-baseline mt-4">
+                        <h2 class="text-3xl font-bold text-gray-800">98%</h2>
+                    </div>
+                    <div class="text-gray-500 text-sm mt-2">
+                        <span>All systems operational</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Power Generation Chart -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Power Generation</h3>
+                    <canvas id="powerChart" height="300"></canvas>
+                </div>
+
+                <!-- Energy Production Chart -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Energy Production</h3>
+                    <canvas id="energyChart" height="300"></canvas>
+                </div>
+            </div>
+
+            <!-- Weather and System Status -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Weather Information -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Weather Conditions</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <i class="fas fa-sun text-4xl text-yellow-500"></i>
+                            <span class="ml-2 text-2xl">25°C</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-gray-500">Sunny</div>
+                            <div class="text-sm text-gray-400">High UV Index</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-4">
+                        <div class="text-center">
+                            <div class="text-gray-500">Humidity</div>
+                            <div class="font-semibold">45%</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-gray-500">Wind</div>
+                            <div class="font-semibold">8 km/h</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-gray-500">Cloud Cover</div>
+                            <div class="font-semibold">10%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Alerts -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">System Alerts</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center text-green-500">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <span>All inverters operating normally</span>
+                        </div>
+                        <div class="flex items-center text-yellow-500">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            <span>Scheduled maintenance due in 5 days</span>
+                        </div>
+                        <div class="flex items-center text-blue-500">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <span>System update available</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="p-4 bg-blue-50 rounded-lg text-blue-600 hover:bg-blue-100">
+                            <i class="fas fa-download mb-2"></i>
+                            <div class="text-sm">Export Data</div>
+                        </button>
+                        <button class="p-4 bg-green-50 rounded-lg text-green-600 hover:bg-green-100">
+                            <i class="fas fa-chart-bar mb-2"></i>
+                            <div class="text-sm">View Report</div>
+                        </button>
+                        <button class="p-4 bg-purple-50 rounded-lg text-purple-600 hover:bg-purple-100">
+                            <i class="fas fa-cog mb-2"></i>
+                            <div class="text-sm">Settings</div>
+                        </button>
+                        <button class="p-4 bg-orange-50 rounded-lg text-orange-600 hover:bg-orange-100">
+                            <i class="fas fa-bell mb-2"></i>
+                            <div class="text-sm">Alerts</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+
+        // Profile Panel Toggle
+        function toggleProfile() {
+            const profilePanel = document.getElementById('profilePanel');
+            const notificationsPanel = document.getElementById('notificationsPanel');
+            profilePanel.classList.toggle('hidden');
+            notificationsPanel.classList.add('hidden'); // Hide notifications when showing profile
+        }
+
+        // Notifications Panel Toggle
+        function toggleNotifications() {
+            const notificationsPanel = document.getElementById('notificationsPanel');
+            const profilePanel = document.getElementById('profilePanel');
+            notificationsPanel.classList.toggle('hidden');
+            profilePanel.classList.add('hidden'); // Hide profile when showing notifications
+        }
+
+        // Close panels when clicking outside
+        document.addEventListener('click', function(event) {
+            const profilePanel = document.getElementById('profilePanel');
+            const notificationsPanel = document.getElementById('notificationsPanel');
+            const profileButton = event.target.closest('button');
+            const notificationButton = event.target.closest('button');
+
+            if (!profileButton && !event.target.closest('#profilePanel')) {
+                profilePanel.classList.add('hidden');
+            }
+            if (!notificationButton && !event.target.closest('#notificationsPanel')) {
+                notificationsPanel.classList.add('hidden');
+            }
+        });
+
+        // Power Generation Chart
+        const powerCtx = document.getElementById('powerChart').getContext('2d');
+        new Chart(powerCtx, {
+            type: 'line',
+            data: {
+                labels: ['6AM', '8AM', '10AM', '12PM', '2PM', '4PM', '6PM'],
+                datasets: [{
+                    label: 'Power Output (kW)',
+                    data: [2, 3.5, 4.8, 5.2, 4.9, 3.8, 2.5],
+                    borderColor: 'rgb(59, 130, 246)',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Energy Production Chart
+        const energyCtx = document.getElementById('energyChart').getContext('2d');
+        new Chart(energyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Energy Production (kWh)',
+                    data: [30, 35, 28, 32, 34, 38, 32],
+                    backgroundColor: 'rgb(34, 197, 94)',
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

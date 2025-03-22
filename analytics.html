@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Solar Panel Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 lg:translate-x-0" id="sidebar">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h1 class="text-xl font-bold text-gray-800">Solar Dashboard</h1>
+            <button class="lg:hidden" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="mt-4">
+            <a href="index.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-home w-6"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="analytics.html" class="flex items-center px-4 py-3 text-gray-700 bg-gray-100">
+                <i class="fas fa-chart-line w-6"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="system-health.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-solar-panel w-6"></i>
+                <span>System Health</span>
+            </a>
+            <a href="settings.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-cog w-6"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 min-h-screen">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm">
+            <div class="flex items-center justify-between p-4">
+                <button class="lg:hidden" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Analytics Content -->
+        <main class="p-6">
+            <!-- Financial Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <!-- Total Savings -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-500 text-sm">Total Savings</h3>
+                        <i class="fas fa-dollar-sign text-green-500"></i>
+                    </div>
+                    <div class="flex items-baseline mt-4">
+                        <h2 class="text-3xl font-bold text-gray-800">15,487</h2>
+                        <span class="ml-2 text-gray-500">USD</span>
+                    </div>
+                    <div class="text-green-500 text-sm mt-2">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>23% from last year</span>
+                    </div>
+                </div>
+
+                <!-- ROI -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-500 text-sm">ROI</h3>
+                        <i class="fas fa-chart-pie text-blue-500"></i>
+                    </div>
+                    <div class="flex items-baseline mt-4">
+                        <h2 class="text-3xl font-bold text-gray-800">12.8</h2>
+                        <span class="ml-2 text-gray-500">%</span>
+                    </div>
+                    <div class="text-green-500 text-sm mt-2">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>2.3% increase</span>
+                    </div>
+                </div>
+
+                <!-- Payback Period -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-500 text-sm">Payback Period</h3>
+                        <i class="fas fa-hourglass-half text-purple-500"></i>
+                    </div>
+                    <div class="flex items-baseline mt-4">
+                        <h2 class="text-3xl font-bold text-gray-800">5.2</h2>
+                        <span class="ml-2 text-gray-500">years</span>
+                    </div>
+                    <div class="text-green-500 text-sm mt-2">
+                        <span>On track with projection</span>
+                    </div>
+                </div>
+
+                <!-- Carbon Offset -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-gray-500 text-sm">Carbon Offset</h3>
+                        <i class="fas fa-leaf text-green-500"></i>
+                    </div>
+                    <div class="flex items-baseline mt-4">
+                        <h2 class="text-3xl font-bold text-gray-800">12.5</h2>
+                        <span class="ml-2 text-gray-500">tons</span>
+                    </div>
+                    <div class="text-green-500 text-sm mt-2">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>1.2 tons this month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Yearly Production Trend -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Yearly Production Trend</h3>
+                    <canvas id="yearlyChart" height="300"></canvas>
+                </div>
+
+                <!-- Financial Benefits -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Financial Benefits</h3>
+                    <canvas id="financialChart" height="300"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Performance Metrics -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Performance Metrics</h3>
+                    <div class="space-y-4">
+                        <div class="relative pt-1">
+                            <div class="flex mb-2 items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold inline-block text-blue-600">
+                                        System Efficiency
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs font-semibold inline-block text-blue-600">
+                                        92%
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                                <div style="width:92%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                            </div>
+                        </div>
+                        <div class="relative pt-1">
+                            <div class="flex mb-2 items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold inline-block text-green-600">
+                                        Energy Yield
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs font-semibold inline-block text-green-600">
+                                        88%
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-green-200">
+                                <div style="width:88%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-500"></div>
+                            </div>
+                        </div>
+                        <div class="relative pt-1">
+                            <div class="flex mb-2 items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold inline-block text-purple-600">
+                                        ROI Progress
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs font-semibold inline-block text-purple-600">
+                                        45%
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-purple-200">
+                                <div style="width:45%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-500"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Energy Distribution -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Energy Distribution</h3>
+                    <canvas id="distributionChart" height="250"></canvas>
+                </div>
+
+                <!-- Financial Summary -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-gray-800 font-semibold mb-4">Financial Summary</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                            <span class="text-gray-600">Initial Investment</span>
+                            <span class="font-semibold">$25,000</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                            <span class="text-gray-600">Total Savings</span>
+                            <span class="font-semibold text-green-600">$15,487</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                            <span class="text-gray-600">Monthly Average</span>
+                            <span class="font-semibold">$342</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                            <span class="text-gray-600">Projected Annual</span>
+                            <span class="font-semibold">$4,104</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+
+        // Yearly Production Chart
+        const yearlyCtx = document.getElementById('yearlyChart').getContext('2d');
+        new Chart(yearlyCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Energy Production (MWh)',
+                    data: [4.2, 4.5, 5.1, 5.8, 6.2, 6.5, 6.8, 6.4, 5.9, 5.2, 4.8, 4.3],
+                    borderColor: 'rgb(59, 130, 246)',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Financial Benefits Chart
+        const financialCtx = document.getElementById('financialChart').getContext('2d');
+        new Chart(financialCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024 (Projected)'],
+                datasets: [{
+                    label: 'Annual Savings ($)',
+                    data: [3200, 3800, 4100, 4500, 5000],
+                    backgroundColor: 'rgb(34, 197, 94)',
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Energy Distribution Chart
+        const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+        new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Home Usage', 'Grid Export', 'Battery Storage'],
+                datasets: [{
+                    data: [60, 25, 15],
+                    backgroundColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(34, 197, 94)',
+                        'rgb(168, 85, 247)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

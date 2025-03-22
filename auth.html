@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup - Solar Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="httpsW://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%);
+        }
+        .form-container {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .form-container.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .switch-form {
+            transition: transform 0.4s ease-in-out;
+        }
+        .form-active {
+            transform: scale(1);
+            opacity: 1;
+            display: block;
+        }
+        .form-inactive {
+            transform: scale(0.9);
+            opacity: 0;
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="gradient-bg min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl form-container" id="authContainer">
+            <!-- Logo -->
+            <div class="text-center">
+                <div class="flex items-center justify-center">
+                    <i class="fas fa-solar-panel text-blue-600 text-4xl"></i>
+                </div>
+                <h2 class="mt-4 text-3xl font-bold text-gray-900" id="formTitle">Sign in to your account</h2>
+                <p class="mt-2 text-sm text-gray-600" id="formSubtitle">
+                    Or <button onclick="toggleForm()" class="text-blue-600 hover:text-blue-500 font-medium">create a new account</button>
+                </p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="mt-8 space-y-6 switch-form form-active" id="loginForm">
+                <div class="rounded-md shadow-sm space-y-4">
+                    <div>
+                        <label for="login-email" class="sr-only">Email address</label>
+                        <input id="login-email" name="email" type="email" required 
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Email address">
+                    </div>
+                    <div>
+                        <label for="login-password" class="sr-only">Password</label>
+                        <input id="login-password" name="password" type="password" required
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Password">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                            Remember me
+                        </label>
+                    </div>
+
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="button" onclick="handleLogin()" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-sign-in-alt text-blue-500 group-hover:text-blue-400"></i>
+                        </span>
+                        Sign in
+                    </button>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="mt-8 space-y-6 switch-form form-inactive" id="signupForm">
+                <div class="rounded-md shadow-sm space-y-4">
+                    <div>
+                        <label for="signup-name" class="sr-only">Full name</label>
+                        <input id="signup-name" name="name" type="text" required
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Full name">
+                    </div>
+                    <div>
+                        <label for="signup-email" class="sr-only">Email address</label>
+                        <input id="signup-email" name="email" type="email" required
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Email address">
+                    </div>
+                    <div>
+                        <label for="signup-password" class="sr-only">Password</label>
+                        <input id="signup-password" name="password" type="password" required
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Password">
+                    </div>
+                    <div>
+                        <label for="signup-confirm-password" class="sr-only">Confirm Password</label>
+                        <input id="signup-confirm-password" name="confirm-password" type="password" required
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Confirm password">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="button" onclick="handleSignup()" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-user-plus text-blue-500 group-hover:text-blue-400"></i>
+                        </span>
+                        Create account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Form animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('authContainer');
+            container.classList.add('animate');
+        });
+
+        // Toggle between login and signup forms
+        function toggleForm() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const formTitle = document.getElementById('formTitle');
+            const formSubtitle = document.getElementById('formSubtitle');
+
+            if (loginForm.classList.contains('form-active')) {
+                loginForm.classList.remove('form-active');
+                loginForm.classList.add('form-inactive');
+                signupForm.classList.remove('form-inactive');
+                signupForm.classList.add('form-active');
+                formTitle.textContent = 'Create a new account';
+                formSubtitle.innerHTML = 'Or <button onclick="toggleForm()" class="text-blue-600 hover:text-blue-500 font-medium">sign in to your account</button>';
+            } else {
+                signupForm.classList.remove('form-active');
+                signupForm.classList.add('form-inactive');
+                loginForm.classList.remove('form-inactive');
+                loginForm.classList.add('form-active');
+                formTitle.textContent = 'Sign in to your account';
+                formSubtitle.innerHTML = 'Or <button onclick="toggleForm()" class="text-blue-600 hover:text-blue-500 font-medium">create a new account</button>';
+            }
+        }
+
+        // Handle login
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Add your login validation logic here
+            if (email && password) {
+                // For demo purposes, we'll just redirect to the dashboard
+                window.location.href = 'index.html';
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        // Handle signup
+        function handleSignup() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+            // Add your signup validation logic here
+            if (name && email && password && confirmPassword) {
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match');
+                    return;
+                }
+                // For demo purposes, we'll just redirect to the dashboard
+                window.location.href = 'index.html';
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        // Framer Motion Animations
+        const { motion } = window.Motion;
+
+        // Animate form container
+        motion(document.getElementById('authContainer'), {
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 }
+        });
+    </script>
+</body>
+</html> 
